@@ -1,0 +1,56 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Ajax demo 1</title>
+<script>
+
+
+//===============================================
+function showList(str, typeSearch) { // eerste dropdownlist
+console.log(typeSearch);
+    if (str == "") {
+        document.getElementById("txtHint").innerHTML = "";
+        return;
+    } else {
+        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {// code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if(typeSearch == "list"){
+					var myArr = JSON.parse(xmlhttp.responseText);
+					printArray(myArr);
+				}
+				if(typeSearch == "answer"){
+					 document.getElementById("txtHint").innerHTML = xmlhttp.responseText;
+				}
+            }
+        }
+		xmlhttp.open("GET","3_ajax_example.php?q="+str+"&type="+typeSearch,true);
+        xmlhttp.send();
+    }
+}
+//===============================================
+function printArray(arr) {
+    var out = "";
+    var i;
+    for(i = 0; i < arr.length; i++) {
+		//console.log(arr[i]);
+		out += '<span id="'  + arr[i] + '" onClick="showList(this.id,\'answer\')">'+ arr[i] + '</span><br>';
+    }
+    document.getElementById("txtHint").innerHTML = out;
+	
+}
+//===============================================
+</script>
+</head>
+<body style="background-color:gray">
+	<p><img src = "http://ma-web.nl/static/vector/Logo_blok.svg" width = "30"> Ajax demo 3</p>
+	<form>
+		<input type = "text" name="search" onKeyUp="showList(this.value, 'list')" placeholder="zoek een land">
+	</form>
+	<div id = "txtHint">hier komt de lijst</div>
+</body>
+</html>
